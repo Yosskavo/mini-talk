@@ -1,45 +1,45 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yel-mota <yel-mota@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/17 18:47:43 by yel-mota          #+#    #+#             */
-/*   Updated: 2025/02/08 13:43:03 by yel-mota         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "mini.h"
 
-#include "minitalk.h"
+t_list yo;
 
-
-void ft_send_string(char c, int ser_pid)
+void ft_ft(int sig)
 {
-	int i = 128;
-	int j = (int)c;
-	while (i != 0)
+	while (yo.c != 0)
 	{
-		if (j >= i)
+		if (yo.c & yo.base)
 		{
-			j = j - i;
-			kill(ser_pid, SIGUSR1);
+			yo.c = yo.c - yo.base;
+			kill(yo.pid_get, SIGUSR1);
+			ft_printf("1");
 		}
 		else
-			kill(ser_pid, SIGUSR2);
-		i /= 2;
-		usleep(1);
+		{
+			kill(yo.pid_get, SIGUSR2);
+			ft_printf("0");
+		}
+		yo.base /= 2;
+		if (yo.base == 0)
+		{
+			yo.c = *++yo.str;
+			yo.base = 128;
+		}
+		while (1)
+			usleep(500);
 	}
 }
 
 int main(int ac, char **av)
 {
-	int i;
-	int	j;
-	if (ac != 3)
-		return (1);
-	j = 0;
-	i = ft_atoi(av[1]);
-	while (av[2][j] != '\0')
-		ft_send_string(av[2][j++], i);
-	return (0);
+	struct sigaction sa;
+
+	sa.sa_flags = 0;
+	sa.sa_handler = ft_ft;
+	sigemptyset(&sa.sa_mask);
+	yo.pid_get = atoi(av[1]);
+	yo.str = av[2];
+	yo.c = yo.str[0];
+	yo.base = 128;
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+		perror("yeap");
+	ft_ft(0);
 }

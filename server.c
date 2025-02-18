@@ -1,52 +1,43 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yel-mota <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/18 16:12:01 by yel-mota          #+#    #+#             */
-/*   Updated: 2025/02/08 13:43:40 by yel-mota         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "mini.h"
 
-#include "minitalk.h"
+t_list yo;
 
-t_list *one;
-
-void ft_restart(void)
+void ft_handler(int sig, siginfo_t *info, void *context)
 {
-	ft_printf("%c", one->c);
-	one->base = 128;
-	one->c = 0;
+	if (sig == SIGUSR1)
+	{
+		yo.save_char += yo.base * 1;
+		yo.base /= 2;
+		ft_printf("1");
+	}
+	if (sig == SIGUSR2)
+	{
+		ft_printf("0");
+		yo.base /= 2;
+	}
+	if (yo.base == 0)
+	{
+		write(1, &(yo.save_char), 1);
+		yo.base = 128;
+		yo.save_char = 0;
+	}
+	kill (info->si_pid, SIGUSR1);
 }
 
-void ft_0(int signal)
+int main (void)
 {
-	one->c += one->base * 0;
-       if ((one->base /= 2) == 0)
-	       ft_restart();  
-}
+	struct sigaction sa;
 
-void ft_1 (int signal)
-{
-	one->c += one->base * 1;
-       if ((one->base /= 2) == 0)
-       		ft_restart(); 
-}
-
-int	main(void)
-{
-	signal(SIGUSR1, ft_1);
-	signal(SIGUSR2, ft_0);
-	one = malloc(sizeof(t_list));
-	if (!one)
-		return (1);
-	one->c = 0;
-	one->base = 128;
-	ft_printf("the PID of the server : %d\n", getpid());
-	while (77)
+	sa.sa_sigaction = ft_handler;
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+	yo.base = 128;
+	yo.save_char = 0;
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+		return (perror("hadono"), 1);
+	if (sigaction(SIGUSR2, &sa, NULL) == -1)
+		return (perror("hello"), 1);
+	ft_printf("this is your pid : %d \n", getpid());
+	while (1)
 		pause();
-	free(one);
-	return (0);
 }
