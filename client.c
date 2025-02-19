@@ -19,18 +19,16 @@ void send_char(char c)
 {
 	int j;
 
-	while (c != 0)
+	while (yo.base != 0)
 	{
 		if (c & yo.base)
 		{
 			c = c - yo.base;
 			j = SIGUSR1;
-			ft_printf("1");
 		}
 		else
 		{
 			j = SIGUSR2;
-			ft_printf("0");
 		}
 		yo.base /= 2;
 		send_signal(j);

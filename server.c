@@ -5,14 +5,8 @@ t_server yo;
 void ft_handler(int sig, siginfo_t *info, void *context)
 {
 	if (sig == SIGUSR1)
-	{
 		yo.save_char += yo.base & 255;
-		yo.base /= 2;
-	}
-	else
-	{
-		yo.base /= 2;
-	}
+	yo.base /= 2;
 	if (yo.base == 0)
 	{
 		write(1, &(yo.save_char), 1);
@@ -27,7 +21,7 @@ int main (void)
 {
 	struct sigaction sa;
 
-	sa.sa_sigaction = ft_handler;
+	sa.sa_sigaction = &ft_handler;
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
 	yo.base = 128;
