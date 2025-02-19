@@ -7,6 +7,7 @@ typedef struct s_list
 	char *str;
 	int pid_get;
 	int c;
+	int reseve_signal;
 // sever things
 	int base;
 	int save_char;
