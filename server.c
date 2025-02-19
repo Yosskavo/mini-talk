@@ -1,18 +1,16 @@
 #include "mini.h"
 
-t_list yo;
+t_server yo;
 
 void ft_handler(int sig, siginfo_t *info, void *context)
 {
 	if (sig == SIGUSR1)
 	{
-		yo.save_char += yo.base * 1;
+		yo.save_char += yo.base & 255;
 		yo.base /= 2;
-		ft_printf("1");
 	}
-	if (sig == SIGUSR2)
+	else
 	{
-		ft_printf("0");
 		yo.base /= 2;
 	}
 	if (yo.base == 0)
@@ -21,6 +19,7 @@ void ft_handler(int sig, siginfo_t *info, void *context)
 		yo.base = 128;
 		yo.save_char = 0;
 	}
+	usleep(500);
 	kill (info->si_pid, SIGUSR1);
 }
 
@@ -33,6 +32,7 @@ int main (void)
 	sigemptyset(&sa.sa_mask);
 	yo.base = 128;
 	yo.save_char = 0;
+	
 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 		return (perror("hadono"), 1);
 	if (sigaction(SIGUSR2, &sa, NULL) == -1)

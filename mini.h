@@ -1,21 +1,26 @@
 #ifndef MINI_H
 # define MINI_H
 
-typedef struct s_list 
-{
 // client things i think
-	char *str;
+
+typedef struct s_client 
+{
 	int pid_get;
-	int c;
-	int reseve_signal;
-// sever things
 	int base;
+	int reseve_signal;
+} t_client;
+
+// sever things
+
+typedef struct s_server
+{
 	int save_char;
-} t_list;
+	int base;
+} t_server; 
 
 # include <unistd.h>
 # include <signal.h>
 # include <stdlib.h>
-# include "ft_printf/ft_printf.h"
+# include "printf/ft_printf.h"
 
 # endif
