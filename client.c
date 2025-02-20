@@ -1,56 +1,73 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yel-mota <yel-mota@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/20 21:37:22 by yel-mota          #+#    #+#             */
+/*   Updated: 2025/02/20 21:46:17 by yel-mota         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mini.h"
 
-t_client yo;
+t_client	g_yo;
 
-void nothing(int i)
+void	nothing(int i)
 {
-	yo.reseve_signal = 1;
+	g_yo.reseve_signal = 1;
 }
 
-void send_signal(int signum)
+void	send_signal(int signum)
 {
-	kill(yo.pid_get, signum);
-	while (!yo.reseve_signal)
-		pause();
-	yo.reseve_signal = 0;
-}
-
-void send_char(char c)
-{
-	int j;
-
-	while (yo.base != 0)
+	if (kill(g_yo.pid_get, signum) == -1)
 	{
-		if (c & yo.base)
+		write(2, "error", 6);
+		exit(1);
+	}
+	while (!g_yo.reseve_signal)
+		pause();
+	g_yo.reseve_signal = 0;
+}
+
+void	send_char(char c)
+{
+	int	j;
+
+	while (g_yo.base != 0)
+	{
+		if (c & g_yo.base)
 		{
-			c = c - yo.base;
+			c = c - g_yo.base;
 			j = SIGUSR1;
 		}
 		else
-		{
 			j = SIGUSR2;
-		}
-		yo.base /= 2;
+		g_yo.base /= 2;
 		send_signal(j);
 	}
 }
 
-void send_the_string(char *str)
+void	send_the_string(char *str)
 {
 	while (*str != '\0')
 	{
-		yo.base = 128;
+		g_yo.base = 128;
 		send_char(*str++);
 	}
-	send_char('\0');
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
-	yo.pid_get = atoi(av[1]);
+	if (ac != 3)
+		return (write(2, "worng argument number", 22), 1);
+	g_yo.pid_get = ft_atoi(av[1]);
+	if (g_yo.pid_get <= 0)
+		return (write(2, "invalid pid", 12), 1);
 	signal(SIGUSR1, nothing);
-	yo.reseve_signal = 0;
+	g_yo.reseve_signal = 0;
 	send_the_string(av[2]);
 }

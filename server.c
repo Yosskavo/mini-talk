@@ -1,37 +1,58 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yel-mota <yel-mota@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/20 21:38:35 by yel-mota          #+#    #+#             */
+/*   Updated: 2025/02/20 21:41:50 by yel-mota         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mini.h"
 
-t_server yo;
+t_server	g_yo;
 
-void ft_handler(int sig, siginfo_t *info, void *context)
+void	ft_handler(int sig, siginfo_t *info, void *context)
 {
-	if (sig == SIGUSR1)
-		yo.save_char += yo.base & 255;
-	yo.base /= 2;
-	if (yo.base == 0)
+	static int	old_pid;
+
+	if (old_pid == 0)
+		old_pid = info->si_pid;
+	if (info->si_pid != old_pid)
 	{
-		write(1, &(yo.save_char), 1);
-		yo.base = 128;
-		yo.save_char = 0;
+		g_yo.save_char = 0;
+		g_yo.base = 128;
+		old_pid = info->si_pid;
 	}
-	usleep(500);
+	if (sig == SIGUSR1)
+		g_yo.save_char += g_yo.base & 255;
+	g_yo.base /= 2;
+	if (g_yo.base == 0)
+	{
+		write(1, &(g_yo.save_char), 1);
+		g_yo.base = 128;
+		g_yo.save_char = 0;
+	}
+	usleep (100);
 	kill (info->si_pid, SIGUSR1);
 }
 
-int main (void)
+int	main(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	sa.sa_sigaction = &ft_handler;
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
-	yo.base = 128;
-	yo.save_char = 0;
-	
+	g_yo.base = 128;
+	g_yo.save_char = 0;
 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
-		return (perror("hadono"), 1);
+		return (perror("error in the server!"), 1);
 	if (sigaction(SIGUSR2, &sa, NULL) == -1)
-		return (perror("hello"), 1);
-	ft_printf("this is your pid : %d \n", getpid());
+		return (perror("error in the server!"), 1);
+	ft_printf("this is pid of the server : %d \n", getpid());
 	while (1)
 		pause();
 }

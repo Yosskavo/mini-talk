@@ -1,39 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini.h                                             :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yel-mota <yel-mota@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/20 21:36:37 by yel-mota          #+#    #+#             */
-/*   Updated: 2025/02/20 21:43:38 by yel-mota         ###   ########.fr       */
+/*   Created: 2024/10/22 02:14:18 by yel-mota          #+#    #+#             */
+/*   Updated: 2025/02/20 00:11:46 by yel-mota         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINI_H
-# define MINI_H
+#include "ftlibft.h"
 
-# include <signal.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include "printf/ft_printf.h"
-# include "libft/ftlibft.h"
-
-// client things i think
-
-typedef struct s_client
+int	ft_strlen(const char *str)
 {
-	int	pid_get;
-	int	base;
-	int	reseve_signal;
-}	t_client;
+	int	i;
 
-// sever things
-
-typedef struct s_server
-{
-	int	save_char;
-	int	base;
-}	t_server;
-
-#endif
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	return (i);
+}

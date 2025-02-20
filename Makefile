@@ -2,9 +2,9 @@ NAME = server
 
 NAME2 = client
 
-SRC = printf/ft_countnbr.c       printf/ft_putnbr_base.c  printf/ft_strlen.c \
-      printf/ft_nbr.c       printf/ft_putadress.c  printf/ft_putone.c       printf/ft_unint.c\
-      printf/ft_printf.c    printf/ft_putchar.c    printf/ft_putstr.c
+SRC = printf/ft_countnbr.c printf/ft_putnbr_base.c libft/ft_strlen.c \
+      printf/ft_nbr.c printf/ft_putadress.c printf/ft_putone.c printf/ft_unint.c\
+      printf/ft_printf.c printf/ft_putchar.c printf/ft_putstr.c libft/ft_atoi.c
 
 SE = server.c
 
