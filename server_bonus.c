@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yel-mota <yel-mota@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 21:38:35 by yel-mota          #+#    #+#             */
-/*   Updated: 2025/02/21 18:43:02 by yel-mota         ###   ########.fr       */
+/*   Updated: 2025/02/21 19:13:44 by yel-mota         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini.h"
+#include "mini_bonus.h"
 
-t_server	g_yo;
+t_server_bonus	g_yo;
+
+static void	ft_print_char(void)
+{
+	write(1, &(g_yo.save_char), 1);
+	g_yo.base = 128;
+	g_yo.save_char = 0;
+	g_yo.null_sig = 0;
+}
 
 static void	ft_handler(int sig, siginfo_t *info, void *context)
 {
-	static int	old_pid;
-
+	static int (old_pid);
 	if (old_pid == 0)
 		old_pid = info->si_pid;
 	if (info->si_pid != old_pid)
@@ -27,14 +34,19 @@ static void	ft_handler(int sig, siginfo_t *info, void *context)
 		old_pid = info->si_pid;
 	}
 	if (sig == SIGUSR1)
-		g_yo.save_char += g_yo.base * 1;
+		g_yo.save_char += g_yo.base & 255;
+	else
+		g_yo.null_sig++;
 	g_yo.base /= 2;
-	if (g_yo.base == 0)
+	if (g_yo.null_sig == 8)
 	{
-		write(1, &(g_yo.save_char), 1);
-		g_yo.base = 128;
-		g_yo.save_char = 0;
+		usleep(100);
+		kill(info->si_pid, SIGUSR2);
+		g_yo.null_sig = 0;
+		return ;
 	}
+	if (g_yo.base == 0)
+		ft_print_char();
 	usleep (100);
 	kill (info->si_pid, SIGUSR1);
 }
@@ -48,6 +60,7 @@ int	main(void)
 	sigemptyset(&sa.sa_mask);
 	g_yo.base = 128;
 	g_yo.save_char = 0;
+	g_yo.null_sig = 0;
 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 		return (perror("error in the server!"), 1);
 	if (sigaction(SIGUSR2, &sa, NULL) == -1)
