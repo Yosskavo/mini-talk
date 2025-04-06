@@ -6,7 +6,7 @@
 /*   By: yel-mota <yel-mota@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 21:38:35 by yel-mota          #+#    #+#             */
-/*   Updated: 2025/02/21 18:43:02 by yel-mota         ###   ########.fr       */
+/*   Updated: 2025/02/26 22:45:28 by yel-mota         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,5 @@ int	main(void)
 	ft_printf("this is pid of the server : %d \n", getpid());
 	while (1)
 		pause();
+	return (0);
 }

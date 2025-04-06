@@ -32,16 +32,20 @@ NAMEO1 = $(SE:.c=.o)
 
 NAMEO2 = $(CL:.c=.o)
 
-all : $(OBJ) $(NAMEO1) $(NAMEO2) $(NAME)
+all : $(NAMEO1) $(NAMEO2) $(NAME) $(NAME2)
 
-$(NAME) : 
+$(NAME) : $(OBJ)
 	cc -Wall -Wextra -Werror $(NAMEO1) $(OBJ) -o $(NAME)
+
+$(NAME2) : $(OBJ)
 	cc -Wall -Wextra -Werror $(NAMEO2) $(OBJ) -o $(NAME2)
 
-bonus : $(NAME1B) $(NAME2B) $(OBJ) $(OBJS) $(NAMEB)
+bonus : $(NAME1B) $(NAME2B) $(OBJ) $(OBJS) $(NAMEB) $(NAMEB1)
 
 $(NAMEB) :
 	cc -Wall -Wextra -Werror $(NAME1B) $(OBJ) -o $(NAMEB)
+	
+$(NAMEB1) :
 	cc -Wall -Wextra -Werror $(NAME2B) $(OBJS) $(OBJ)  -o $(NAMEB1)
 
 clean : 
@@ -52,4 +56,4 @@ fclean : clean
 
 re : fclean all
 
-.PHONY : re all clean fclean
+.PHONY : re all clean fclean bonus

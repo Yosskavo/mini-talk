@@ -6,7 +6,7 @@
 /*   By: yel-mota <yel-mota@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 18:20:54 by yel-mota          #+#    #+#             */
-/*   Updated: 2025/02/21 19:12:40 by yel-mota         ###   ########.fr       */
+/*   Updated: 2025/02/26 22:51:58 by yel-mota         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	nothing(int i)
 
 static void	last_order(int i)
 {
-	ft_printf("the message send to the server, yallah ghiyarha");
+	ft_printf("the message send to the server, yallah ghiyarha\n");
 	exit(0);
 }
 
@@ -58,8 +58,6 @@ void	send_char_bonus(char c)
 
 int	main(int ac, char **av)
 {
-	struct sigaction	sa;
-
 	if (ac != 3)
 		return (write(2, "worng argument number", 22), 1);
 	g_yo.pid_get = ft_atoi(av[1]);
@@ -70,4 +68,5 @@ int	main(int ac, char **av)
 	g_yo.reseve_signal = 0;
 	g_yo.base = 128;
 	send_the_string_bonus(av[2]);
+	return (0);
 }

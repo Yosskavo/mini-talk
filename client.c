@@ -6,7 +6,7 @@
 /*   By: yel-mota <yel-mota@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 21:37:22 by yel-mota          #+#    #+#             */
-/*   Updated: 2025/02/21 17:16:06 by yel-mota         ###   ########.fr       */
+/*   Updated: 2025/02/26 22:45:07 by yel-mota         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ static void	send_the_string(char *str)
 
 int	main(int ac, char **av)
 {
-	struct sigaction	sa;
-
 	if (ac != 3)
 		return (write(2, "worng argument number", 22), 1);
 	g_yo.pid_get = ft_atoi(av[1]);
@@ -70,4 +68,5 @@ int	main(int ac, char **av)
 	signal(SIGUSR1, nothing);
 	g_yo.reseve_signal = 0;
 	send_the_string(av[2]);
+	return (0);
 }
